@@ -9,12 +9,15 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "todomvc-app-css": "^2.0.6",
+    "es6-promise": "^3.2.1",
+    "firebase": "^2.4.2",
     "vue": "^2.0.1",
+    "vue-router": "^2.0.1",
+    "vuex-router-sync": "^3.0.0",
     "vuex": "^2.0.0"
   },
   "devDependencies": {
-    "autoprefixer": "^6.4.0",
+  "autoprefixer": "^6.4.0",
     "babel-core": "^6.0.0",
     "babel-loader": "^6.0.0",
     "babel-plugin-transform-runtime": "^6.0.0",
