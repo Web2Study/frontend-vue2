@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <div class="header">
+  <div>
+    <div class="myheader">
       <div class="inner">
         <router-link to="/" exact>
           <img class="logo" src="./assets/logo.png" alt="logo">
@@ -13,25 +13,14 @@
       </div>
     </div>
     <transition name="fade" mode="out-in">
-      <router-view class="view"></router-view>
+      <router-view class="view container"></router-view>
     </transition>
   </div>
 </template>
 
 <style lang="stylus">
-body
-  font-family Roboto, Helvetica, sans-serif
-  font-size 15px
-  background-color lighten(#eceef1, 30%)
-  margin 0
-  padding-top 55px
-  color #34495e
 
-a
-  color #34495e
-  text-decoration none
-
-.header
+.myheader
   background-color #156600
   position fixed
   z-index 999

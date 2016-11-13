@@ -25,3 +25,4 @@ const app = new Vue({
 })
 
 app.$mount('#app')
+//app.store.state.route.go('')

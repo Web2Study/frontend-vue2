@@ -93,8 +93,9 @@ export default {
         type: this.type
       }).then(() => {
         if (this.page < 0 || this.page > this.maxPage) {
-          this.$router.replace(`/${this.type}/1`)
-          return
+          //this.$router.replace(`/${this.type}/1`)
+          this.$route.path.replace(`/${this.type}/1`)
+          //return
         }
         this.transition = to > from ? 'slide-left' : 'slide-right'
         this.displayedPage = to

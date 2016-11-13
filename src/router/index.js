@@ -6,16 +6,19 @@ Vue.use(Router)
 import { createListView } from '../views/CreateListView'
 import ItemView from '../views/ItemView.vue'
 import UserView from '../views/UserView.vue'
+import LoginView from '../views/LoginView.vue'
 
 export default new Router({
   mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
+  
   routes: [
+    { path: '/', component: LoginView },
     { path: '/top/:page(\\d+)?', component: createListView('top') },
     { path: '/new/:page(\\d+)?', component: createListView('new') },
  
     { path: '/item/:id(\\d+)', component: ItemView },
     { path: '/user/:id', component: UserView },
-    { path: '*', redirect: '/top' }
+    { path: '*', redirect: '/new' }
   ]
 })
