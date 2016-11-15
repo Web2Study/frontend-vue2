@@ -5,7 +5,10 @@
             Imagine-a-Company
           </h1>
           <h2>Do whatever you want when you want to.</h2>
-          <div class="ui huge primary button">Get Started <i class="right arrow icon"></i></div>
+           <router-link  to="/new" >
+           <div class="ui huge primary button">Get Started <i class="right arrow icon"></i></div>
+           </router-link>
+          
         </div>
   </div>
 </template>
