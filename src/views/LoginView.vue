@@ -53,7 +53,7 @@ export default {
         if(rt) alert('OK')
      } 
    },
-   ready() {
+   mounted() {
       $('.ui.form')
         .form({
           on: 'blur',
@@ -93,7 +93,7 @@ export default {
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 h2
   color #42b983
 #login

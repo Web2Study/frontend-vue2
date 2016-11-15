@@ -1,88 +1,235 @@
 <template>
-  <div>
-    <div class="myheader">
-      <div class="inner">
-        <router-link to="/" exact>
-          <img class="logo" src="./assets/logo.png" alt="logo">
-        </router-link>
-        <router-link to="/top">当下流行</router-link>
-        <router-link to="/new">最新上架</router-link>
-          <a class="github" href="https://share-book.github.io" target="_blank">
-          Share Books
-        </a>
+
+
+    <!-- Page Contents -->
+
+
+
+      <div class="ui inverted vertical masthead center aligned segment">
+        <div class="ui container">
+          <div class="ui large secondary inverted pointing menu">
+            <a class="toc item">
+              <i class="sidebar icon"></i>
+            </a>
+            <a class="active item">Home</a>
+            <a class="item">Work</a>
+            <a class="item">Company</a>
+            <a class="item">Careers</a>
+            <div class="right item">
+              <a class="ui inverted button">Log in</a>
+              <a class="ui inverted button">Sign Up</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui text container">
+          <h1 class="ui inverted header">
+            Imagine-a-Company
+          </h1>
+          <h2>Do whatever you want when you want to.</h2>
+          <div class="ui huge primary button">Get Started <i class="right arrow icon"></i></div>
+        </div>
+
+
+
+        <div class="ui vertical stripe segment">
+          <div class="ui middle aligned stackable grid container">
+            <div class="row">
+              <div class="eight wide column">
+                <h3 class="ui header">We Help Companies and Companions</h3>
+                <p>We can give your company superpowers to do things that they never thought possible. Let us delight your customers
+                  and empower your needs...through pure data analytics.</p>
+                <h3 class="ui header">We Make Bananas That Can Dance</h3>
+                <p>Yes that's right, you thought it was the stuff of dreams, but even bananas can be bioengineered.</p>
+              </div>
+              <div class="six wide right floated column">
+                <img src="assets/images/wireframe/white-image.png" class="ui large bordered rounded image">
+              </div>
+            </div>
+            <div class="row">
+              <div class="center aligned column">
+                <a class="ui huge button">Check Them Out</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="ui inverted vertical footer segment">
+          <div class="ui container">
+            <div class="ui stackable inverted divided equal height stackable grid">
+              <div class="three wide column">
+                <h4 class="ui inverted header">About</h4>
+                <div class="ui inverted link list">
+                  <a href="#" class="item">Sitemap</a>
+                  <a href="#" class="item">Contact Us</a>
+                  <a href="#" class="item">Religious Ceremonies</a>
+                  <a href="#" class="item">Gazebo Plans</a>
+                </div>
+              </div>
+              <div class="three wide column">
+                <h4 class="ui inverted header">Services</h4>
+                <div class="ui inverted link list">
+                  <a href="#" class="item">Banana Pre-Order</a>
+                  <a href="#" class="item">DNA FAQ</a>
+                  <a href="#" class="item">How To Access</a>
+                  <a href="#" class="item">Favorite X-Men</a>
+                </div>
+              </div>
+              <div class="seven wide column">
+                <h4 class="ui inverted header">Footer Header</h4>
+                <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <transition name="fade" mode="out-in">
-      <router-view class="view container"></router-view>
-    </transition>
-  </div>
+
+
 </template>
+<script>
+/*
+ <router-link to="/top" class="item">当下流行</router-link>
+            <router-link to="/new" class="item">最新上架</router-link>
+        <transition name="fade" mode="out-in">
+          <router-view class="view container"></router-view>
+        </transition>
+ </div>
+ */
 
-<style lang="stylus">
+export default {
 
-.myheader
-  background-color #156600
-  position fixed
-  z-index 999
-  top 0
-  left 0
-  right 0
-  .inner
-    max-width 800px
-    box-sizing border-box
-    margin 0px auto
-    padding 15px 5px
-  a
-    color rgba(255, 255, 255, .8)
-    line-height 24px
-    transition color .15s ease
-    display inline-block
-    vertical-align middle
-    font-weight 300
-    letter-spacing .075em
-    margin-right 1.8em
-    &:hover
-      color #fff
-    &.router-link-active
-      color #fff
-      font-weight 400
-    &:nth-child(6)
-      margin-right 0
-  .github
-    color #fff
-    font-size .9em
-    margin 0
-    float right
+  data() {
+     return {
+      current:'/',
+      menus:[{title:'Home',url:'/'},{title:'Login',url:'/login'}]
+    }
+  },
+  methods: {
+      myclass(menu) {
+          let active=menu.url===this.current
+          return {
+            active: active,
+            item: true
+          }
+      }
+ },
+   mounted() {
+     // console.log("App ready!")
+           // fix menu when passed
+      $('.masthead')
+        .visibility({
+          once: false,
+          onBottomPassed: function() {
+            $('.fixed.menu').transition('fade in')
+          },
+          onBottomPassedReverse: function() {
+            $('.fixed.menu').transition('fade out')
+          }
+        })
+     
+     $('.ui.sidebar')
+        .sidebar('attach events', '.toc.item')
+  
+    }   
+      
 
-.logo
-  width 24px
-  margin-right 10px
-  display inline-block
-  vertical-align middle
-
-.view
-  max-width 800px
-  margin 0 auto
-  position relative
-
-.fade-enter-active, .fade-leave-active
-  transition all .2s ease
-
-.fade-enter, .fade-leave-active
-  opacity 0
-
-@media (max-width 860px)
-  .header .inner
-    padding 15px 30px
-
-@media (max-width 600px)
-  body
-    font-size 14px
-  .header
-    .inner
-      padding 15px
-    a
-      margin-right 1em
-    .github
-      display none
+}
+</script>
+<style type="text/css">
+  .hidden.menu {
+    display: none;
+  }
+  
+  .masthead.segment {
+    min-height: 700px;
+    padding: 1em 0em;
+  }
+  
+  .masthead .logo.item img {
+    margin-right: 1em;
+  }
+  
+  .masthead .ui.menu .ui.button {
+    margin-left: 0.5em;
+  }
+  
+  .masthead h1.ui.header {
+    margin-top: 3em;
+    margin-bottom: 0em;
+    font-size: 4em;
+    font-weight: normal;
+  }
+  
+  .masthead h2 {
+    font-size: 1.7em;
+    font-weight: normal;
+  }
+  
+  .ui.vertical.stripe {
+    padding: 8em 0em;
+  }
+  
+  .ui.vertical.stripe h3 {
+    font-size: 2em;
+  }
+  
+  .ui.vertical.stripe .button + h3,
+  .ui.vertical.stripe p + h3 {
+    margin-top: 3em;
+  }
+  
+  .ui.vertical.stripe .floated.image {
+    clear: both;
+  }
+  
+  .ui.vertical.stripe p {
+    font-size: 1.33em;
+  }
+  
+  .ui.vertical.stripe .horizontal.divider {
+    margin: 3em 0em;
+  }
+  
+  .quote.stripe.segment {
+    padding: 0em;
+  }
+  
+  .quote.stripe.segment .grid .column {
+    padding-top: 5em;
+    padding-bottom: 5em;
+  }
+  
+  .footer.segment {
+    padding: 5em 0em;
+  }
+  
+  .secondary.pointing.menu .toc.item {
+    display: none;
+  }
+  
+  @media only screen and (max-width: 700px) {
+    .ui.fixed.menu {
+      display: none !important;
+    }
+    .secondary.pointing.menu .item,
+    .secondary.pointing.menu .menu {
+      display: none;
+    }
+    .secondary.pointing.menu .toc.item {
+      display: block;
+    }
+    .masthead.segment {
+      min-height: 350px;
+    }
+    .masthead h1.ui.header {
+      font-size: 2em;
+      margin-top: 1.5em;
+    }
+    .masthead h2 {
+      margin-top: 0.5em;
+      font-size: 1.5em;
+    }
+  }
 </style>

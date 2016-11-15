@@ -1,28 +1,45 @@
-require('es6-promise').polyfill()
 import Vue from 'vue'
-import App from './App.vue'
-import store from './store'
-import router from './router'
-import { sync } from 'vuex-router-sync'
-import * as filters from './filters'
+import VueRouter from 'vue-router'
 
-// sync the router with the vuex store.
-// this registers `store.state.route`
-sync(store, router)
+Vue.use(VueRouter)
 
-// register global utility filters.
-Object.keys(filters).forEach(key => {
-  Vue.filter(key, filters[key])
+import auth from './auth'
+import App from './components/App.vue'
+import About from './components/About.vue'
+import Dashboard from './components/Dashboard.vue'
+import Login from './components/Login.vue'
+
+function requireAuth (to, from, next) {
+  if (!auth.loggedIn()) {
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+  } else {
+    next()
+  }
+}
+
+const router = new VueRouter({
+  mode: 'history',
+ // base: __dirname,
+  routes: [
+    { path: '/about', component: About },
+    { path: '/dashboard', component: Dashboard, beforeEnter: requireAuth },
+    { path: '/login', component: Login },
+    { path: '/logout',
+      beforeEnter (to, from, next) {
+        auth.logout()
+        next('/')
+      }
+    }
+  ]
 })
 
-// create the app instance.
-// here we inject the router and store to all child components,
-// making them available everywhere as `this.$router` and `this.$store`.
-const app = new Vue({
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
   router,
-  store,
-  ...App // Object spread copying everything from App.vue
+  // replace the content of <div id="app"></div> with App
+  render: h => h(App)
 })
-
-app.$mount('#app')
-//app.store.state.route.go('')
