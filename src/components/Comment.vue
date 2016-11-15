@@ -1,19 +1,31 @@
 <template>
-  <li v-if="comment" class="comment">
-    <div class="by">
-      <router-link :to="'/user/' + comment.by">{{ comment.by }}</router-link>
-      {{ comment.time | timeAgo }} ago
+  <div class="ui threaded comments" data-garbage="true">
+  <div class="comment" data-garbage="true">
+    <a class="avatar">
+      <img src="../assets/matt.jpg">
+    </a>
+    <div class="content">
+      <router-link class="author" :to="'/user/' + comment.by">{{ comment.by }}</router-link>
+      <div class="metadata" data-garbage="true">
+        <span class="date"> {{ comment.time | timeAgo }} ago</span>
+      </div>
       <span v-if="comment.kids && comment.kids.length">
         | <a class="expand" @click="open = !open">
           {{ (open ? 'collapse ' : 'expand ') + pluralize(comment.kids.length) }}
         </a>
       </span>
+      <div class="text" v-html="comment.text">
+      </div>
+      <div class="actions" data-garbage="true">
+        <a class="reply">回复</a>
+      </div>
+      <div class="comment-children" v-show="open">
+          <comment v-for="id in comment.kids" :id="id"></comment>
+       </div>
     </div>
-    <div class="text" v-html="comment.text"></div>
-    <ul class="comment-children" v-show="open">
-      <comment v-for="id in comment.kids" :id="id"></comment>
-    </ul>
-  </li>
+  </div>
+
+  </div>
 </template>
 
 <script>
@@ -43,26 +55,4 @@ export default {
 }
 </script>
 
-<style lang="stylus">
-.comment-children
-  .comment-children
-    margin-left 1em
 
-.comment
-  border-top 1px solid #eee
-  position relative
-  .expand
-    cursor pointer
-  .by, .text
-    font-size .9em
-    padding 1em 0
-  .by
-    color #999
-    padding-bottom 0
-    a
-      color #999
-      text-decoration underline
-  .text
-    a:hover
-      color #ff6600
-</style>

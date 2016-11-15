@@ -1,6 +1,5 @@
 <template>
   <div class="user-view">
-    <spinner :show="!user"></spinner>
     <template v-if="user">
       <h1>User : {{ user.id }}</h1>
       <ul class="meta">
@@ -14,7 +13,7 @@
 </template>
 
 <script>
-import Spinner from '../components/Spinner.vue'
+
 
 function fetchUser (store) {
   return store.dispatch('FETCH_USER', {
@@ -24,7 +23,6 @@ function fetchUser (store) {
 
 export default {
   name: 'user-view',
-  components: { Spinner },
   computed: {
     user () {
       return this.$store.state.users[this.$route.params.id]

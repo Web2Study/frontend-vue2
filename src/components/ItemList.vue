@@ -1,7 +1,7 @@
 <template>
   <div class="ui segment">
     <div class="ui dimmer" :class="loading? 'active' : '' ">
-      <div class="ui large text loader">加载中</div>
+      <div class="ui inverted large text loader">加载中</div>
     </div>
     <div>
       <div class="ui labeled icon button">
