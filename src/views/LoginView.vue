@@ -16,7 +16,7 @@
           <div class="field">
             <div class="ui left icon input">
               <i class="user icon"></i>
-              <input type="text" name="email" v-model="email" placeholder="E-mail address">
+              <input type="text" name="mobile" v-model="mobile" placeholder="Phone number">
             </div>
           </div>
           <div class="field">
@@ -25,7 +25,7 @@
               <input type="password" name="password" v-model="pass" placeholder="Password">
             </div>
           </div>
-          <div class="ui  large primary button" @click='login()'>登　录</div>
+          <div class="ui  large primary button" @click='login'>登　录</div>
         </div>
    
          <div  class="ui error message"></div>
@@ -44,8 +44,8 @@ import auth from '../auth.js'
 export default {
   data () {
     return {
-      email: 'alex@139.com',
-      pass: '1234',
+      mobile: '13640327787',
+      pass: '123456',
       error: false
     }
   },
@@ -54,16 +54,12 @@ export default {
         .form({
           on: 'blur',
           fields: {
-            email: {
-              identifier  : 'email',
+            mobile: {
+              identifier  : 'mobile',
               rules: [
                 {
                   type   : 'empty',
-                  prompt : '亲！请输入电子邮件'
-                },
-                {
-                  type   : 'email',
-                  prompt : '正确电子邮件，比如lsj@139.com'
+                  prompt : '亲！请输入手机号'
                 }
               ]
             },
@@ -88,7 +84,7 @@ export default {
     login () {
       let rt= $('.form').form('validate form')
       if (!rt) return
-      auth.login(this.email, this.pass, loggedIn => {
+      auth.sigin(this.mobile, this.pass, loggedIn => {
         if (!loggedIn) {
           this.error = true
         } else {

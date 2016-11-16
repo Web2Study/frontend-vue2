@@ -1,5 +1,5 @@
 <template>
-  <div class="ui threaded comments" data-garbage="true">
+  <div class="ui  comments" data-garbage="true">
   <div class="comment" data-garbage="true">
     <a class="avatar">
       <img src="../assets/matt.jpg">
@@ -11,7 +11,7 @@
       </div>
       <span v-if="comment.kids && comment.kids.length">
         | <a class="expand" @click="open = !open">
-          {{ (open ? 'collapse ' : 'expand ') + pluralize(comment.kids.length) }}
+          {{ (open ? '收缩 ' : '展开 ') + pluralize(comment.kids.length) }}
         </a>
       </span>
       <div class="text" v-html="comment.text">
@@ -19,7 +19,7 @@
       <div class="actions" data-garbage="true">
         <a class="reply">回复</a>
       </div>
-      <div class="comment-children" v-show="open">
+      <div  v-show="open">
           <comment v-for="id in comment.kids" :id="id"></comment>
        </div>
     </div>
@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     pluralize (n) {
-      return n + (n === 1 ? ' reply' : ' replies')
+      return n + ('条回复 ')
     }
   }
 }

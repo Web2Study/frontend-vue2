@@ -1,4 +1,4 @@
-require('es6-promise').polyfill()
+//require('es6-promise').polyfill()
 import Vue from 'vue'
 
 import store from './store'
@@ -15,9 +15,13 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
-// create the app instance.
-// here we inject the router and store to all child components,
-// making them available everywhere as `this.$router` and `this.$store`.
+/*
+var config = {
+  syncURL: "https://books-t.wilddogio.com" //输入节点 URL
+}
+wilddog.initializeApp(config);
+const api  = wilddog.sync().ref();
+*/
 const app = new Vue({
   router,
   store,

@@ -44,17 +44,44 @@ function fetchItem (store) {
   })
 }
 
+// recursively fetch all descendent comments
+function fetchComments (store, item) {
+  if (item.kids) {
+    return store.dispatch('FETCH_ITEMS', {
+      ids: item.kids
+    }).then(() => Promise.all(item.kids.map(id => {
+      return fetchComments(store, store.state.items[id])
+    })))
+  }
+}
+
+function fetchItemAndComments (store) {
+  return fetchItem(store).then(() => {
+    const { items, route } = store.state
+    return fetchComments(store, items[route.params.id])
+  })
+}
+
 export default {
   name: 'item-view',
   components: { Comment },
+  data () {
+    return {
+      loading: true
+    }
+  },
   computed: {
     item () {
       return this.$store.state.items[this.$route.params.id]
     }
   },
+  // on the server, only fetch the item itself
   preFetch: fetchItem,
+  // on the client, fetch everything
   beforeMount () {
-    fetchItem(this.$store)
+    fetchItemAndComments(this.$store).then(() => {
+      this.loading = false
+    })
   }
 }
 </script>

@@ -1,14 +1,14 @@
 /* globals localStorage */
-
+import { curUser,login} from './store/api'
 export default {
-  login (email, pass, cb) {
+  sigin (mobile, pass, cb) {
     cb = arguments[arguments.length - 1]
-    if (localStorage.token) {
+    if (curUser()) {
       if (cb) cb(true)
       this.onChange(true)
       return
     }
-    pretendRequest(email, pass, (res) => {
+    requestLogin(mobile, pass, (res) => {
       if (res.authenticated) {
         localStorage.token = res.token
         if (cb) cb(true)
@@ -20,32 +20,28 @@ export default {
     })
   },
 
-  getToken () {
-    return localStorage.token
-  },
-
   logout (cb) {
-    delete localStorage.token
+   // delete localStorage.token
     if (cb) cb()
     this.onChange(false)
   },
 
   loggedIn () {
-    return !!localStorage.token
+    return !!curUser()
+    //!!localStorage.token
   },
 
   onChange () {}
 }
 
-function pretendRequest (email, pass, cb) {
-  setTimeout(() => {
-    if (email === 'alex@139.com' && pass === '1234') {
+function requestLogin (mobile, pass, cb) {
+  login(mobile,pass).then(user=>{
       cb({
         authenticated: true,
-        token: Math.random().toString(36).substring(7)
+        token: user.idToken
       })
-    } else {
+    }).catch(function (err) {
       cb({ authenticated: false })
-    }
-  }, 0)
+    })
+  
 }

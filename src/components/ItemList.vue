@@ -14,8 +14,9 @@
   <i class="right arrow icon"></i>
    <router-link v-if="hasMore" :to="'/' + type + '/' + (page + 1)">更多</router-link>
       <a v-else class="disabled">更多</a>
+     
 </div>
-
+ <button class="ui primary button" @click="addNewItem">新增</button>
       <transition :name="transition">
         <div class="ui three doubling cards" :key="displayedPage" v-if="displayedPage > 0">
 
@@ -44,7 +45,7 @@
 <script>
 //import Spinner from './Spinner.vue'
 import Item from './Item.vue'
-import { watchList } from '../store/api'
+import {updateTop, curUser,addItem,watchList} from '../store/api'
 
 export default {
   name: 'item-list',
@@ -71,7 +72,11 @@ export default {
       displayedItems: isInitialRender ? this.$store.getters.activeItems : []
     }
   },
-
+ created(){
+  // console.log(this.type)
+   if (this.type==='top')
+    updateTop()
+ },
   computed: {
     page () {
       return Number(this.$store.state.route.params.page) || 1
@@ -88,6 +93,7 @@ export default {
   beforeMount () {
     if (this.$root._isMounted) {
       this.loadItems(this.page)
+     
     }
     // watch the current list for realtime updates
     this.unwatchList = watchList(this.type, ids => {
@@ -109,6 +115,20 @@ export default {
   },
 
   methods: {
+    addNewItem(){
+        let u=curUser()
+        let demo={
+              "uid": u.uid,
+              "by": u.displayName,
+              "descendants": 0,
+              "score": 0,
+              "time": Date.now(),
+              "title": "this is test",
+              "type": "story"
+            }
+        addItem(demo)
+                
+    },
     loadItems (to = this.page, from = -1) {
       this.loading = true
       this.$store.dispatch('FETCH_LIST_DATA', {
