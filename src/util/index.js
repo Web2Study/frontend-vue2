@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import {createCache} from './cache'
 export const find=(data,item)=>{
   data=data||[]
   return data.find(p=>p===item)

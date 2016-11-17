@@ -27,23 +27,38 @@ businessMgr.fetchIdsByType=(type) => {
     ? Promise.resolve(api.cachedIds[type])
     : fetch(`${type}-books`)
 }
+
 businessMgr.addItem=async (item,parent=0)=>{
   let id=await fetchNextId()
   item.id = id
+  let uid=userMgr.curUser().uid
+  let user=await businessMgr.fetchUser(uid)
+  item.uid=uid
+  item.by=user.displayName
   //item.type||
   item.type=parent>0?'comment':'book'
-  if(parent>0) item.parent = parent
-  await api.child(`item/${id}`).set(item)
-  api.cachedItems.set(`item/${id}`,item)
   if(parent>0) {
+    item.parent = parent
+  }
+  let key=`item/${id}`
+  await api.child(key).set(item)
+  api.cachedItems.set(key,item)
+ 
+//  console.log(api.cachedItems.get(key))
+  if(parent>0) {
+     
      let p=await businessMgr.fetchItem(parent)
+  //   console.log("load parent:",parent)
+ //    console.log(p)
      p.kids=p.kids||[]
      p.kids.unshift(id)
-     api.cachedItems.set(`item/${p.id}`,p)
-     await api.child(`item/${p.id}/kids`).set(p.kids)
+     let pk=`item/${parent}`
+     await api.child(pk+'/kids').set(p.kids)
+     api.cachedItems.set(pk,p)
+    // console.log('cache for: ',pk)
+   //  console.log(api.cachedItems.get(pk))
   }
- let uid=userMgr.curUser().uid
- let user=await businessMgr.fetchUser(uid)
+
 
   if ("book"===item.type){
      let data=api.cachedIds['new']||[]
@@ -61,7 +76,7 @@ businessMgr.addItem=async (item,parent=0)=>{
   api.cachedItems.set(`user/${uid}`,user)
   return item
 }
-businessMgr.getMyBooks=async (type)=>{
+businessMgr.getMyBooks=async ()=>{
   let user =userMgr.curUser()
   user=await businessMgr.fetchUser(user.uid)
   data=user.books||[]
@@ -112,15 +127,20 @@ businessMgr.watchList=(type, cb)=>{
  api.child('top-books').set(data)
 }
 
-
-
-
-
-
+businessMgr.debug=()=>{
+  let item=api.cachedItems.get('item/1')
+  console.log(item)
+  item=api.cachedItems.get('item/2')
+  console.log(item)
+  let user=api.cachedItems.get(`user/${item.uid}`)
+  console.log(user)
+}
 function fetch(child) {
   const cache = api.cachedItems
   if (cache && cache.has(child)) {
-    return Promise.resolve(cache.get(child))
+    let rt=cache.get(child)
+    //console.log('load from cache for:',child,rt)
+    return Promise.resolve(rt)
   } else {
     return new Promise((resolve, reject) => {
       api.child(child).once('value', snapshot => {

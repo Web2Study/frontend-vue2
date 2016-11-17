@@ -1,5 +1,5 @@
 import wilddog from 'wilddog'
-
+//import {createCache} from '../util'
 import LRU from 'lru-cache'
 
 const config = {
@@ -8,11 +8,13 @@ const config = {
 }
 wilddog.initializeApp(config);
 const api = wilddog.sync().ref()
+
 api.cachedItems = LRU({
   max: 1000,
   maxAge: 1000 * 60 * 15 // 15 min cache
 })
 
+//api.cachedItems = createCache("LRU", 100 * 100 * 10);
 /*
 api.child(`item`).on('child_added', snapshot => {
      let rec = snapshot.val()
