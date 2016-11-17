@@ -11,8 +11,12 @@ export function timeAgo (time) {
     return pluralize(~~(between / 60), ' 分钟')
   } else if (between < 86400) {
     return pluralize(~~(between / 3600), ' 小时')
-  } else {
-    return pluralize(~~(between / 86400), ' 天')
+  }else if (between < (86400*30)) {
+     return pluralize(~~(between / (86400)), '天')
+  }else if (between < (86400*30*365)){
+    return pluralize(~~(between / (86400*30)), '月')
+  }else {
+    return pluralize(~~(between / (86400*30*365)), '年')
   }
 }
 

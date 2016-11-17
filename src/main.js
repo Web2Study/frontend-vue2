@@ -15,17 +15,10 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
-/*
-var config = {
-  syncURL: "https://books-t.wilddogio.com" //输入节点 URL
-}
-wilddog.initializeApp(config);
-const api  = wilddog.sync().ref();
-*/
-const app = new Vue({
+let cfg=Vue.util.extend({
   router,
-  store,
-  ...App // Object spread copying everything from App.vue
-})
+  store
+}, App))
+const app = new Vue(cfg)
 
 app.$mount('#app')
