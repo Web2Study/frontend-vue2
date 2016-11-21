@@ -16,7 +16,7 @@ businessMgr.fetchItem=(id)=>{
 }
 
 businessMgr.fetchItems=(ids)=>{
-  return Promise.all(ids.map(id => fetchItem(id)))
+  return Promise.all(ids.map(id => businessMgr.fetchItem(id)))
 }
 
 businessMgr.fetchUser=(id)=> {
@@ -42,22 +42,14 @@ businessMgr.addItem=async (item,parent=0)=>{
   }
   let key=`item/${id}`
   await api.child(key).set(item)
-  api.cachedItems.set(key,item)
- 
-//  console.log(api.cachedItems.get(key))
+ // api.cachedItems.set(key,item)
   if(parent>0) {
-     
      let p=await businessMgr.fetchItem(parent)
-  //   console.log("load parent:",parent)
- //    console.log(p)
      p.kids=p.kids||[]
      p.kids.unshift(id)
      let pk=`item/${parent}`
      await api.child(pk+'/kids').set(p.kids)
-     api.cachedItems.set(pk,p)
-    // console.log('cache for: ',pk)
-   //  console.log(api.cachedItems.get(pk))
-  }
+   }
 
 
   if ("book"===item.type){
@@ -73,7 +65,7 @@ businessMgr.addItem=async (item,parent=0)=>{
      user.comments.unshift(id)
      await api.child(`user/${uid}/comments`).set(user.comments)
   }
-  api.cachedItems.set(`user/${uid}`,user)
+  //api.cachedItems.set(`user/${uid}`,user)
   return item
 }
 businessMgr.getMyBooks=async ()=>{
@@ -115,7 +107,7 @@ businessMgr.watchList=(type, cb)=>{
   }
 }
 
- function updateTop(){
+ businessMgr.updateTop=()=>{
  let data=api._tops
  //console.log(data)
 
@@ -128,12 +120,11 @@ businessMgr.watchList=(type, cb)=>{
 }
 
 businessMgr.debug=()=>{
-  let item=api.cachedItems.get('item/1')
-  console.log(item)
-  item=api.cachedItems.get('item/2')
-  console.log(item)
-  let user=api.cachedItems.get(`user/${item.uid}`)
-  console.log(user)
+  let data=api.cachedItems.dump()
+  data.forEach(function(element) {
+    console.log(element)
+  }, this);
+  
 }
 function fetch(child) {
   const cache = api.cachedItems

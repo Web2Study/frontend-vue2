@@ -45,7 +45,7 @@
 <script>
 //import Spinner from './Spinner.vue'
 import Item from './Item.vue'
-import {updateTop, curUser,addItem,watchList} from '../store/api'
+import API from '../api'
 
 export default {
   name: 'item-list',
@@ -74,8 +74,8 @@ export default {
   },
  created(){
   // console.log(this.type)
-   if (this.type==='top')
-    updateTop()
+   //if (this.type==='top')
+    //businessMgr.updateTop()
  },
   computed: {
     page () {
@@ -96,7 +96,7 @@ export default {
      
     }
     // watch the current list for realtime updates
-    this.unwatchList = watchList(this.type, ids => {
+    this.unwatchList = API.businessMgr.watchList(this.type, ids => {
       this.$store.commit('SET_LIST', { type: this.type, ids })
       this.$store.dispatch('ENSURE_ACTIVE_ITEMS').then(() => {
         this.displayedItems = this.$store.getters.activeItems
@@ -116,7 +116,7 @@ export default {
 
   methods: {
     addNewItem(){
-        let u=curUser()
+        let u=API.businessMgr.curUser()
         let demo={
               "uid": u.uid,
               "by": u.displayName,
@@ -126,7 +126,7 @@ export default {
               "title": "this is test",
               "type": "story"
             }
-        addItem(demo)
+        API.businessMgr.addItem(demo)
                 
     },
     loadItems (to = this.page, from = -1) {

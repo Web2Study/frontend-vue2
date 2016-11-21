@@ -18,7 +18,7 @@ Object.keys(filters).forEach(key => {
 let cfg=Vue.util.extend({
   router,
   store
-}, App))
+}, App)
 const app = new Vue(cfg)
 
 app.$mount('#app')

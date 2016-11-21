@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { fetchItems, fetchIdsByType, fetchUser ,addItem} from './api'
+import API from '../api'
 
 Vue.use(Vuex)
 
@@ -20,7 +20,7 @@ const store = new Vuex.Store({
     // ensure data for rendering given list type
     FETCH_LIST_DATA: ({ commit, dispatch, state }, { type }) => {
       commit('SET_ACTIVE_TYPE', { type })
-      return fetchIdsByType(type)
+      return API.businessMgr.fetchIdsByType(type)
         .then(ids => commit('SET_LIST', { type, ids }))
         .then(() => dispatch('ENSURE_ACTIVE_ITEMS'))
     },
@@ -36,7 +36,7 @@ const store = new Vuex.Store({
       // only fetch items that we don't already have.
       ids = ids.filter(id => !state.items[id])
       if (ids.length) {
-        return fetchItems(ids).then(items => commit('SET_ITEMS', { items }))
+        return API.businessMgr.fetchItems(ids).then(items => commit('SET_ITEMS', { items }))
       } else {
         return Promise.resolve()
       }
@@ -45,7 +45,7 @@ const store = new Vuex.Store({
     FETCH_USER: ({ commit, state }, { id }) => {
       return state.users[id]
         ? Promise.resolve(state.users[id])
-        : fetchUser(id).then(user => commit('SET_USER', { user }))
+        : API.businessMgr.fetchUser(id).then(user => commit('SET_USER', { user }))
     }
   },
 

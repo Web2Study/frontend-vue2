@@ -1,9 +1,9 @@
 /* globals localStorage */
-import { curUser,login} from './store/api'
+import API from './api'
 export default {
   sigin (mobile, pass, cb) {
     cb = arguments[arguments.length - 1]
-    if (curUser()) {
+    if (API.userMgr.curUser()) {
       if (cb) cb(true)
       this.onChange(true)
       return
@@ -21,21 +21,21 @@ export default {
   },
 
   logout (cb) {
-   // delete localStorage.token
+    delete localStorage.token
     if (cb) cb()
     this.onChange(false)
   },
 
   loggedIn () {
-    return !!curUser()
-    //!!localStorage.token
+   // return !!API.userMgr.curUser()
+    return !!localStorage.token
   },
 
   onChange () {}
 }
 
 function requestLogin (mobile, pass, cb) {
-  login(mobile,pass).then(user=>{
+  API.userMgr.login(mobile,pass).then(user=>{
       cb({
         authenticated: true,
         token: user.idToken
