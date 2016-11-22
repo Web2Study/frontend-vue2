@@ -5,7 +5,7 @@ import ItemList from '../components/ItemList.vue'
 // They are essentially higher order components wrapping ItemList.vue.
 export function createListView (type) {
   return {
-    name: `${type}-stories-view`,
+    name: `${type}-books-view`,
     /*
     preFetch (store) {
       return store.dispatch('FETCH_LIST_DATA', { type })

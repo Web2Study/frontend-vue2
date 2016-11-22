@@ -1,41 +1,55 @@
 // this is aliased in webpack config based on server/client build
 import api from './create-api'
-import userMgr from './userMgr'
+import * as userMgr from './userMgr'
 import wilddog from 'wilddog'
 
 
-let businessMgr={}
 
-// warm the front page cache every 15 min
+/*
 function warmCache() {
   fetchItems((api.cachedIds.top || []).slice(0, 30))
   setTimeout(warmCache, 1000 * 60 * 15)
+}*/
+export  function  watchList(type, cb){
+  let first = true
+  const ref = api.child(`${type}-books`)
+  const handler = snapshot => {
+    if (first) {
+      first = false
+    } else {
+      cb(snapshot.val())
+    }
+  }
+  ref.on('value', handler)
+  return () => {
+    ref.off('value', handler)
+  }
 }
-businessMgr.fetchItem=(id)=>{
+export  function  fetchItem(id){
   return fetch(`item/${id}`)
 }
 
-businessMgr.fetchItems=(ids)=>{
-  return Promise.all(ids.map(id => businessMgr.fetchItem(id)))
+export  function  fetchItems(ids){
+  return Promise.all(ids.map(id => fetchItem(id)))
 }
 
-businessMgr.fetchUser=(id)=> {
+export  function  fetchUser(id){
   return fetch(`user/${id}`)
 }
-businessMgr.fetchIdsByType=(type) => {
+export  function  fetchIdsByType(type) {
   return api.cachedIds && api.cachedIds[type]
     ? Promise.resolve(api.cachedIds[type])
     : fetch(`${type}-books`)
 }
 
-businessMgr.addItem=async (item,parent=0)=>{
+export async function  addItem(item,parent=0){
   let id=await fetchNextId()
   item.id = id
   let uid=userMgr.curUser().uid
-  let user=await businessMgr.fetchUser(uid)
+  let user=await fetchUser(uid)
   item.uid=uid
   item.by=user.displayName
-  //item.type||
+  //console.log('add item',item)
   item.type=parent>0?'comment':'book'
   if(parent>0) {
     item.parent = parent
@@ -44,7 +58,7 @@ businessMgr.addItem=async (item,parent=0)=>{
   await api.child(key).set(item)
  // api.cachedItems.set(key,item)
   if(parent>0) {
-     let p=await businessMgr.fetchItem(parent)
+     let p=await fetchItem(parent)
      p.kids=p.kids||[]
      p.kids.unshift(id)
      let pk=`item/${parent}`
@@ -68,16 +82,16 @@ businessMgr.addItem=async (item,parent=0)=>{
   //api.cachedItems.set(`user/${uid}`,user)
   return item
 }
-businessMgr.getMyBooks=async ()=>{
+export async function  getMyBooks(){
   let user =userMgr.curUser()
-  user=await businessMgr.fetchUser(user.uid)
+  user=await fetchUser(user.uid)
   data=user.books||[]
-  let data =await Promise.all(data.map(id => businessMgr.fetchItem(id)))
+  let data =await Promise.all(data.map(id => fetchItem(id)))
   return data
 }
-businessMgr.likeItem=async (itemId)=>{
-   let user=await businessMgr.fetchUser(userMgr.curUser().uid)
-   let likes=user.likes||[]
+export async function  likeItem(itemId){
+   let user=await fetchUser(userMgr.curUser().uid)
+   user.likes=user.likes||[]
    const d = likes.find(p => p === itemId)
    if( !d) {
       let result=await api.child(`item/${itemId}/score`).transaction(currentValue => {
@@ -85,29 +99,15 @@ businessMgr.likeItem=async (itemId)=>{
          return id
       })
       let score = result.snapshot.val()
-      likes.unshift(itemId)
-      await api.child(`user/${uid}/likes`).set(likes)
-      api.cachedItems.set(`user/${user.uid}`,user)
+      user.likes.unshift(itemId)
+      await api.child(`user/${uid}/likes`).set(user.likes)
+     // api.cachedItems.set(`user/${user.uid}`,user)
   }
   //console.log('already like')
 }
-businessMgr.watchList=(type, cb)=>{
-  let first = true
-  const ref = api.child(`${type}-books`)
-  const handler = snapshot => {
-    if (first) {
-      first = false
-    } else {
-      cb(snapshot.val())
-    }
-  }
-  ref.on('value', handler)
-  return () => {
-    ref.off('value', handler)
-  }
-}
 
- businessMgr.updateTop=()=>{
+
+export async function  updateTop(){
  let data=api._tops
  //console.log(data)
 
@@ -119,7 +119,7 @@ businessMgr.watchList=(type, cb)=>{
  api.child('top-books').set(data)
 }
 
-businessMgr.debug=()=>{
+export  function  debug(){
   let data=api.cachedItems.dump()
   data.forEach(function(element) {
     console.log(element)
@@ -162,4 +162,3 @@ function fetchNextId() {
     })
   })
 }
-export default {businessMgr,userMgr}

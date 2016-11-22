@@ -10,7 +10,7 @@
         </span>
         <p class="meta">
           {{ item.score }} points | by
-          <router-link :to="'/user/' + item.by">{{ item.by }}</router-link>
+          <router-link :to="'/user/' + item.uid">{{ item.by }}</router-link>
           {{ item.time | timeAgo }} ago
         </p>
       </div>
@@ -24,7 +24,7 @@
       </div>
       <form class="ui reply form">
         <div class="field">
-          <textarea></textarea>
+          <textarea ></textarea>
         </div>
         <div class="ui blue labeled submit icon button">
           <i class="icon edit"></i> 回复
@@ -50,6 +50,7 @@ function fetchComments (store, item) {
     return store.dispatch('FETCH_ITEMS', {
       ids: item.kids
     }).then(() => Promise.all(item.kids.map(id => {
+      console.log(id)
       return fetchComments(store, store.state.items[id])
     })))
   }
@@ -68,15 +69,19 @@ export default {
   data () {
     return {
       loading: true
+      
     }
   },
   computed: {
     item () {
-      return this.$store.state.items[this.$route.params.id]
+      let item=this.$store.state.items[this.$route.params.id]
+      //console.log(item)
+      return item
     }
   },
+  
   // on the server, only fetch the item itself
-  preFetch: fetchItem,
+ // preFetch: fetchItem,
   // on the client, fetch everything
   beforeMount () {
     fetchItemAndComments(this.$store).then(() => {

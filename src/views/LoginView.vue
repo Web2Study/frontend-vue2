@@ -84,7 +84,7 @@ export default {
     login () {
       let rt= $('.form').form('validate form')
       if (!rt) return
-      auth.sigin(this.mobile, this.pass, loggedIn => {
+      auth.login(this.mobile, this.pass, loggedIn => {
         if (!loggedIn) {
           this.error = true
         } else {

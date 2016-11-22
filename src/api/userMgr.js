@@ -1,12 +1,13 @@
 import wilddog from 'wilddog'
 import api from './create-api'
-let userMgr={}
 
-userMgr.curUser=()=>{
+export  function curUser(){
   return  wilddog.auth().currentUser
 }
-
-userMgr.createUser=async (phone,password)=>{
+export   function signOut(){
+  return wilddog.signOut()
+}
+export  async function createUser(phone,password){
    await wilddog.auth().createUserWithPhoneAndPassword(phone,password)
    let user =  wilddog.auth().currentUser
    let uid = `${user.uid}`
@@ -15,29 +16,29 @@ userMgr.createUser=async (phone,password)=>{
    return user
 }
 
-userMgr.login=async (phone,password)=>{ 
+export async function login(phone,password){ 
   return wilddog.auth().signInWithPhoneAndPassword(phone,password)
 }
 
-userMgr.loginByEmail=async (email, password)=>{ 
+export async function loginByEmail(email, password){ 
   return wilddog.auth().signInWithEmailAndPassword(email, password)
 }
 
-userMgr.updateEmail=async (email)=>{ 
+export async function updateEmail(email){ 
    let user = wilddog.auth().currentUser
    await user.updateEmail(email)
    let uid = `${user.uid}`
    await api.child(`user/${uid}`).update({email:email})
    return user
 }
-userMgr.updatePhone=async (phone)=>{ 
+export async function updatePhone(phone){ 
   let user =  wilddog.auth().currentUser
   await user.updatePhone(phone)
   let uid = `${user.uid}`
   await api.child(`user/${uid}`).update({phone:phone})
   return user
 }
-userMgr.updateProfile=async (displayName,photoUrl)=>{ 
+export async function  updateProfile(displayName,photoUrl){ 
   let profile={
       'displayName': displayName,
       'photoURL': photoUrl
@@ -49,7 +50,3 @@ userMgr.updateProfile=async (displayName,photoUrl)=>{
 
    return user
 }
-
-
-
-export default userMgr

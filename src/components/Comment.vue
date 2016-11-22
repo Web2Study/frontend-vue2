@@ -5,7 +5,7 @@
       <img src="../assets/matt.jpg">
     </a>
     <div class="content">
-      <router-link class="author" :to="'/user/' + comment.by">{{ comment.by }}</router-link>
+      <router-link class="author" :to="'/user/' + comment.uid">{{ comment.by }}</router-link>
       <div class="metadata" data-garbage="true">
         <span class="date"> {{ comment.time | timeAgo }} ago</span>
       </div>
@@ -14,7 +14,7 @@
           {{ (open ? '收缩 ' : '展开 ') + pluralize(comment.kids.length) }}
         </a>
       </span>
-      <div class="text" v-html="comment.text">
+      <div class="text" v-html="comment.title">
       </div>
       <div class="actions" data-garbage="true">
         <a class="reply">回复</a>
@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     comment () {
-      return this.$store.state.items[this.id]
+      return this.$store.state.items[this.id]||{}
     }
   },
   beforeMount () {

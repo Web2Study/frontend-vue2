@@ -45,8 +45,8 @@
 <script>
 //import Spinner from './Spinner.vue'
 import Item from './Item.vue'
-import API from '../api'
-
+import  * as businessMgr from '../api'
+import  {curUser} from '../api/userMgr'
 export default {
   name: 'item-list',
 
@@ -96,7 +96,7 @@ export default {
      
     }
     // watch the current list for realtime updates
-    this.unwatchList = API.businessMgr.watchList(this.type, ids => {
+    this.unwatchList = businessMgr.watchList(this.type, ids => {
       this.$store.commit('SET_LIST', { type: this.type, ids })
       this.$store.dispatch('ENSURE_ACTIVE_ITEMS').then(() => {
         this.displayedItems = this.$store.getters.activeItems
@@ -116,7 +116,8 @@ export default {
 
   methods: {
     addNewItem(){
-        let u=API.businessMgr.curUser()
+        let u=curUser()
+        if (!u) return
         let demo={
               "uid": u.uid,
               "by": u.displayName,
@@ -124,9 +125,9 @@ export default {
               "score": 0,
               "time": Date.now(),
               "title": "this is test",
-              "type": "story"
+              "type": "book"
             }
-        API.businessMgr.addItem(demo)
+        businessMgr.addItem(demo)
                 
     },
     loadItems (to = this.page, from = -1) {

@@ -28,12 +28,13 @@
 import auth from './auth'
 
 export default {
-  data () {
-    return {
-      loggedIn: auth.loggedIn()
-    }
+  computed: {
+    loggedIn(){
+      return auth.loggedIn()
+    } 
   },
   methods: {
+    
     myclass(path){
       let cur=this.$route.path
       return {item:true,active:path==cur} 

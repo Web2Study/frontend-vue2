@@ -22,7 +22,7 @@
   <div class="extra content">
     <div class="ui large transparent left icon input">
       <i class="heart outline icon"></i>
-      <input type="text" placeholder="Add Comment...">
+      <input type="text" placeholder="Add Comment..." @keyup.13="addComment()" v-model="newComment">
     </div>
   </div>
 </div>
@@ -32,9 +32,19 @@
 </template>
 
 <script>
+import  {addItem}  from '../api'
 export default {
   name: 'news-item',
-  props: ['item']
+  props: ['item'],
+  data() {
+    return { newComment:''}
+  },
+  methods:{
+    addComment(){
+      addItem({title:this.newComment},this.item.id)
+       //console.log(this.newComment)
+    }
+  }
 }
 </script>
 

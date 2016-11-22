@@ -1,16 +1,15 @@
 /* globals localStorage */
-import API from './api'
+import * as userMgr from './api/userMgr'
 export default {
-  sigin (mobile, pass, cb) {
+  login (mobile, pass, cb) {
     cb = arguments[arguments.length - 1]
-    if (API.userMgr.curUser()) {
+    if (userMgr.curUser()) {
       if (cb) cb(true)
       this.onChange(true)
       return
     }
     requestLogin(mobile, pass, (res) => {
       if (res.authenticated) {
-        localStorage.token = res.token
         if (cb) cb(true)
         this.onChange(true)
       } else {
@@ -21,24 +20,24 @@ export default {
   },
 
   logout (cb) {
-    delete localStorage.token
-    if (cb) cb()
-    this.onChange(false)
+    userMgr.logout()
+    .then(()=>{
+       if (cb) cb()
+       this.onChange(false)
+    })
   },
 
   loggedIn () {
-   // return !!API.userMgr.curUser()
-    return !!localStorage.token
+    return !!userMgr.curUser()
   },
 
   onChange () {}
 }
 
 function requestLogin (mobile, pass, cb) {
-  API.userMgr.login(mobile,pass).then(user=>{
+  userMgr.login(mobile,pass).then(user=>{
       cb({
-        authenticated: true,
-        token: user.idToken
+        authenticated: true
       })
     }).catch(function (err) {
       cb({ authenticated: false })
